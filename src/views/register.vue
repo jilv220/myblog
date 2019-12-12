@@ -1,7 +1,8 @@
 <template>
   <el-form :model="model" :rules="rules">
     <div class="login">
-      <h1 align="center" class="el-bottom">Login</h1>
+
+      <h1 align="center" class="el-bottom">Register</h1>
 
       <el-form-item label="Username" prop="username">
         <el-input
@@ -23,8 +24,14 @@
         />
       </el-form-item>
 
-      <el-form-item>
-        <el-button class="login-button" type="primary" v-on:click="login()">Login</el-button>
+      <el-form-item label="Comfirm Password" prop="confirm">
+        <el-input
+          prefix-icon="el-icon-key"
+          type="password"
+          name="confirm"
+          v-model="model.confirm"
+          placeholder="Confirm Password"
+        />
       </el-form-item>
 
       <el-form-item>
@@ -42,7 +49,8 @@ export default {
     return {
       model: {
         username: "",
-        password: ""
+        password: "",
+        confirm: ""
       },
       rules: {
         username: [
@@ -64,7 +72,7 @@ export default {
             message: "Password length should be at least 5 characters",
             trigger: "blur"
           }
-        ]
+        ],
       }
     };
   },
@@ -76,28 +84,33 @@ export default {
           this.model.password == this.$parent.mockAccount.password
         ) {
           this.$emit("authenticated", true);
-          this.$router.push({ name: "space" });
+          this.$router.replace({ name: "space" });
         } else {
-          alert("The username and / or password is incorrect");
           console.log("The username and / or password is incorrect");
         }
       } else {
-        alert("A username and password must be present");
         console.log("A username and password must be present");
       }
     },
     register() {
-      this.$router.push({name: "register"});
-    },
-    onBackListener() {
+
+        if(this.model.username != ""
+        && this.model.password != ""
+        && this.model.confirm != "") {
+
+            if (this.model.password == this.model.confirm) {
+                
+                this.$router.push({name: "login"});
+                
+            } else {
+                alert("Two passwords are not the same");
+                console.log("Two passwords are not the same");
+            }
+        } else {
+            alert("please fill in all items in the form");
+        }
 
     }
-  },
-  mounted() {
-    document.addEventListener("backbutton", this.onBackListener, false);
-  },
-  beforeDestroy() {
-    document.removeEventListener("backbutton", this.onBackListener);
   }
 };
 </script>
@@ -121,10 +134,6 @@ export default {
 }
 
 .reg-button {
-  width: 100%;
-}
-
-.login-button {
   width: 100%;
   margin-top: 20px;
 }

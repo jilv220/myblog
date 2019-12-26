@@ -5,6 +5,16 @@
       <el-row class="login-reg" type="flex" justify="end">
         <el-button class="login-button" type="primary" @click="toLogin()">Login</el-button>
         <el-button class="reg-button" type="success" @click="toRegister()">Register</el-button>
+
+        <el-col span='4'>
+        <el-input 
+        class="search-bar" 
+        prefix-icon="el-icon-search" 
+        v-model="search" 
+        placeholder="Search">
+        </el-input>
+        </el-col>
+
       </el-row>
     </el-header>
 
@@ -22,7 +32,12 @@
             active-text-color="#ffd04b"
           >
             <el-menu-item index="1">Latest Published</el-menu-item>
-            <el-menu-item index="2">Articles by Category</el-menu-item>
+            <el-submenu index="2">
+            <template slot="title">Articles by Category</template>
+              <el-menu-item index="2-1">Coding Related</el-menu-item>
+              <el-menu-item index="2-2">Chit Chat</el-menu-item>
+              <el-menu-item index="2-3">Notes</el-menu-item>
+            </el-submenu>
           </el-menu>
         </el-col>
       </el-row>
@@ -61,7 +76,8 @@ export default {
   data() {
     return {
       activeIndex: "1",
-      items: []
+      items: [],
+      search: '',
     };
   },
   created: function initItems() {
@@ -95,16 +111,21 @@ export default {
 
 <style scoped>
 .homepage {
-  background-image: url("../assets/aqua.jpg");
+  background-image: url("../assets/bg.jpg");
   background-position: -300px;
   background-color: white;
 }
+.search-bar {
+  margin-left: 10px;
+}
+
 .blog-content {
   background-color: white;
 }
 
 .login-reg {
   margin-top: 10px;
+  margin-right: 10px;
 }
 
 .login-button {

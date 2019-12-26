@@ -4,6 +4,10 @@ import router from './router/router.js'
 import '../theme/index.css'
 import elementUI from 'element-ui'
 import Vuetify from 'vuetify'
+import axios from 'axios';
+
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+Vue.prototype.$axios = axios;
 
 // server ip in production
 Vue.config.productionTip = false

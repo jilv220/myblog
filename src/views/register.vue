@@ -44,6 +44,7 @@
 export default {
   name: "register",
   data() {
+
     var validateUserName = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("Please enter Username"));
@@ -115,6 +116,24 @@ export default {
     register(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+
+          var params = new URLSearchParams();
+          params.append('userName', this.model.username);       
+          params.append('passWord', this.model.password);
+
+          // post with axios
+          this.$axios({
+            method: 'post',
+            url: "http://localhost:8088/api/user/add",
+            data: params
+          })
+          .then(function(response) {
+            console.log(response)
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
+
           alert("Register Success!");
           this.$router.push({ name: "login" });
         } else {

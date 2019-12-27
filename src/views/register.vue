@@ -41,19 +41,36 @@
 </template>
 
 <script>
+// import axios from "axios";
 export default {
   name: "register",
   data() {
-
     var validateUserName = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("Please enter Username"));
+      } else if (value.length < 6 || value.length > 12) {
+        callback(new Error("Username should between 6 to 12 characters"));
       } else {
+        // query sql to check if exist
         setTimeout(() => {
-          if (this.model.username !== "") {
-            this.$refs.model.validateField("username");
-          }
-          callback();
+
+          var params = {
+            userName: value
+          };
+
+          this.$axios({
+            method: "get",
+            url: "http://localhost:8088/api/user/find",
+            params: params
+          }).then(function(response) {
+            if (response.data == true) {
+              console.log("works");
+              callback(new Error("User already exists"));
+            } else {
+              callback();
+            }
+          });
+
         }, 300);
       }
     };
@@ -62,21 +79,20 @@ export default {
       if (value === "") {
         callback(new Error("Please enter Password"));
       } else {
-        
         setTimeout(() => {
-           if (this.model.password !== "") {
-          this.$refs.model.validateField("password");
-        }
-        callback();
+          if (this.model.password !== "") {
+            this.$refs.model.validateField("password");
+          }
+          callback();
         }, 300);
       }
     };
 
     var checkPass = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("Please confirm Password"));
+        callback(new Error("Please confirm password"));
       } else if (value !== this.model.password) {
-        callback(new Error("Two Passwords are not the same"));
+        callback(new Error("Please check your password"));
       } else {
         callback();
       }
@@ -116,23 +132,22 @@ export default {
     register(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-
           var params = new URLSearchParams();
-          params.append('userName', this.model.username);       
-          params.append('passWord', this.model.password);
+          params.append("userName", this.model.username);
+          params.append("passWord", this.model.password);
 
           // post with axios
           this.$axios({
-            method: 'post',
+            method: "post",
             url: "http://localhost:8088/api/user/add",
             data: params
           })
-          .then(function(response) {
-            console.log(response)
-          })
-          .catch(e => {
-            this.errors.push(e)
-          })
+            .then(function(response) {
+              console.log(response);
+            })
+            .catch(e => {
+              console.log(e);
+            });
 
           alert("Register Success!");
           this.$router.push({ name: "login" });

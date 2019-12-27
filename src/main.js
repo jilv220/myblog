@@ -6,6 +6,7 @@ import elementUI from 'element-ui'
 import Vuetify from 'vuetify'
 import axios from 'axios';
 
+// change the default content type of axios
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 Vue.prototype.$axios = axios;
 

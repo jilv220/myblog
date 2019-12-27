@@ -63,7 +63,7 @@ export default {
           }).then(function(response) {
             if (response.data == true) {
               console.log("works");
-              callback(new Error("User already exists"));
+              callback(new Error("Username already used"));
             } else {
               callback();
             }
@@ -94,9 +94,9 @@ export default {
 
     var checkPass = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("Please confirm password"));
+        callback(new Error("Please recheck your password"));
       } else if (value !== this.model.password) {
-        callback(new Error("Please check your password"));
+        callback(new Error("These passwords do not match"));
       } else {
         callback();
       }

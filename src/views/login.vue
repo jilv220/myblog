@@ -30,12 +30,12 @@
       <el-form-item>
         <el-button class="reg-button" type="success" v-on:click="register()">Register</el-button>
       </el-form-item>
-
     </div>
   </el-form>
 </template>
 
 <script>
+import router from "../router/router.js"
 export default {
   name: "login",
   data() {
@@ -70,28 +70,35 @@ export default {
   },
   methods: {
     login() {
-      if (this.model.username != "" && this.model.password != "") {
-        if (
-          this.model.username == this.$parent.mockAccount.username &&
-          this.model.password == this.$parent.mockAccount.password
-        ) {
-          this.$emit("authenticated", true);
-          this.$router.push({ name: "space" });
+      var params = new URLSearchParams();
+      params.append("userName", this.model.username);
+      params.append("passWord", this.model.password);
+
+      // post with axios
+      this.$axios({
+        method: "post",
+        url: "http://localhost:8088/api/login",
+        data: params
+      })
+      .then(function(response) {
+
+        console.log(response);
+        
+        if (response.data.code == '200') {
+
+          router.push({ name: "space" })
+          
         } else {
-          alert("The username and / or password is incorrect");
-          console.log("The username and / or password is incorrect");
+          alert("Invalid username or password");
         }
-      } else {
-        alert("A username and password must be present");
-        console.log("A username and password must be present");
-      }
+
+      })
+
     },
     register() {
-      this.$router.push({name: "register"});
+      this.$router.push({ name: "register" });
     },
-    onBackListener() {
-
-    }
+    onBackListener() {}
   },
   mounted() {
     document.addEventListener("backbutton", this.onBackListener, false);
@@ -132,6 +139,6 @@ export default {
 
 <style lang = "scss">
 .login .el-form-item {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 </style>

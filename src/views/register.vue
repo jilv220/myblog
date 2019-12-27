@@ -41,19 +41,17 @@
 </template>
 
 <script>
-// import axios from "axios";
 export default {
   name: "register",
   data() {
     var validateUserName = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("Please enter Username"));
+        callback(new Error("Please enter username"));
       } else if (value.length < 6 || value.length > 12) {
         callback(new Error("Username should between 6 to 12 characters"));
       } else {
         // query sql to check if exist
         setTimeout(() => {
-
           var params = {
             userName: value
           };
@@ -70,21 +68,27 @@ export default {
               callback();
             }
           });
-
         }, 300);
       }
     };
 
     var validatePass = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("Please enter Password"));
+        callback(new Error("Please enter password"));
+      } else if (value.length < 6 || value.length > 12) {
+        callback(new Error("Password should between 6 to 12 characters"));
       } else {
         setTimeout(() => {
-          if (this.model.password !== "") {
-            this.$refs.model.validateField("password");
+
+          if (!value.match(/[A-Z]+/)) {
+            callback(new Error("Password should contain at least one uppercase"));
+          } else if (!value.match(/[0-9]+/)) {
+            callback(new Error("Password should contain at least one number"));
+          } else {
+            callback();
           }
-          callback();
-        }, 300);
+
+        }, 200);
       }
     };
 
